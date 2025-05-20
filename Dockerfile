@@ -25,3 +25,12 @@ EXPOSE 80
 
 # Start Apache
 CMD ["apache2-foreground"]
+
+
+WORKDIR /var/www
+
+# Copy everything
+COPY . .
+
+# Serve from public
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
