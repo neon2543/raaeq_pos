@@ -43,7 +43,6 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
 # Expose Apache port
-e19db5a (Fix: Remove IdeHelperServiceProvider and update dependencies)
 EXPOSE 80
 
 # Use Apache as default
