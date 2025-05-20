@@ -47,6 +47,8 @@ RUN apt-get update && apt-get install -y \
         unzip \
         && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
         && docker-php-ext-install -j$(nproc) gd exif
+        RUN composer install --no-dev --optimize-autoloader || { echo "Composer install failed"; exit 1; }
+
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
