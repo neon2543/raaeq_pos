@@ -6,7 +6,7 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     libzip-dev zip unzip git curl && \
     docker-php-ext-install pdo pdo_mysql zip
@@ -14,23 +14,17 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy all files to container
+# Copy application files
 COPY . .
 
-# Set file permissions
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-# Expose port
+# Expose Apache port
 EXPOSE 80
 
-# Start Apache
+# Use Apache as default
 CMD ["apache2-foreground"]
-
-
-WORKDIR /var/www
-
-# Copy everything
-COPY . .
-
-# Serve from public
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
