@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+HEAD
 # Copy composer files first
 COPY composer.json composer.lock ./
 
@@ -31,7 +32,19 @@ RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 RUN chmod -R 775 storage bootstrap/cache || true
 
 # Expose Apache
+
+# Copy application files
+COPY . .
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+
+# Expose Apache port
+e19db5a (Fix: Remove IdeHelperServiceProvider and update dependencies)
 EXPOSE 80
 
-# Start Apache
+# Use Apache as default
 CMD ["apache2-foreground"]
