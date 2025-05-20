@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: laravel-app
+    env: docker
+    plan: free
+    branch: main
+    buildCommand: |
+      composer install --no-dev
+      php artisan key:generate
+      php artisan migrate --force
+    startCommand: php artisan serve --host=0.0.0.0 --port=10000
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: your-remote-mysql-host
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: your_db_name
+      - key: DB_USERNAME
+        value: your_username
+      - key: DB_PASSWORD
+        value: your_password
